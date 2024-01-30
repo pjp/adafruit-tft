@@ -40,7 +40,7 @@ disp = st7789.ST7789(
 height = disp.width  # we swap height/width to rotate it to landscape!
 width = disp.height
 image = Image.new("RGB", (width, height))
-rotation = 180
+rotation = 0
 
 # Get drawing object to draw on image.
 draw = ImageDraw.Draw(image)
