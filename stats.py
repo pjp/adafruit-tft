@@ -14,6 +14,7 @@ from adafruit_rgb_display import st7789
 # Configuration for CS and DC pins (these are FeatherWing defaults on M0/M4):
 cs_pin = digitalio.DigitalInOut(board.CE0)
 dc_pin = digitalio.DigitalInOut(board.D25)
+backlight = digitalio.DigitalInOut(board.D26)
 reset_pin = None
 
 # Config for display baudrate (default max is 24mhz):
@@ -34,6 +35,10 @@ disp = st7789.ST7789(
     x_offset=0,
     y_offset=80,
 )
+
+# Turn on the Backlight
+backlight.switch_to_output()
+backlight.value = True
 
 # Create blank image for drawing.
 # Make sure to create image with mode 'RGB' for full color.
