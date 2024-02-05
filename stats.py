@@ -7,8 +7,10 @@ import time
 import subprocess
 import digitalio
 import board
+import os
 from PIL import Image, ImageDraw, ImageFont
 from adafruit_rgb_display import st7789
+from digitalio import DigitalInOut, Direction
 
 
 # Configuration for CS and DC pins (these are FeatherWing defaults on M0/M4):
@@ -19,6 +21,7 @@ reset_pin = None
 
 # Config for display baudrate (default max is 24mhz):
 BAUDRATE = 64000000
+SPEED_FILE = "/tmp/speed.txt"
 
 # Setup SPI bus using hardware SPI:
 spi = board.SPI()
@@ -35,6 +38,13 @@ disp = st7789.ST7789(
     x_offset=0,
     y_offset=80,
 )
+
+# Input pins:
+button_A = DigitalInOut(board.D5)
+button_A.direction = Direction.INPUT
+
+button_B = DigitalInOut(board.D6)
+button_B.direction = Direction.INPUT
 
 # Turn on the Backlight
 backlight.switch_to_output()
@@ -73,6 +83,13 @@ backlight = digitalio.DigitalInOut(board.D22)
 backlight.switch_to_output()
 backlight.value = True
 
+# Create the temp. file if it doesn't exist
+file = open(SPEED_FILE, 'a')
+file.close()
+
+# Flag to indicate this is the first time we have started
+First = True
+
 while True:
     # Draw a black filled box to clear the image.
     draw.rectangle((0, 0, width, height), outline=0, fill=0)
@@ -97,12 +114,21 @@ while True:
     cmd="date '+%Y%m%d:%H%M%S'"
     Time = subprocess.check_output(cmd, shell=True).decode("utf-8")
 
+    if not button_B.value:  # B button pressed
+       cmd="sudo shutdown -h now"
+
+       y = top
+       draw.text((x, y), "Shutting Down ...", font=font, fill="#FFFF00")
+
+       disp.image(image, rotation)
+       time.sleep(5)
+
+       subprocess.check_output(cmd, shell=True).decode("utf-8")
+
+
     # Write five lines of text.
     y = top
     draw.text((x, y), Time, font=font, fill="#FFFF00")
-
-    # Extra spaving
-    y += (2 * LineSpacing)
 
     y += (LineSpacing + font.getsize(Time)[1])
     draw.text((x, y), IP, font=font, fill="#FFFFFF")
@@ -119,7 +145,28 @@ while True:
     y += (LineSpacing + font.getsize(Disk)[1])
     draw.text((x, y), Temp, font=font, fill="#FF00FF")
 
-    # Display image.
-    disp.image(image, rotation)
-    time.sleep(5)
+    y += (LineSpacing + font.getsize(Temp)[1])
 
+    if First or not button_A.value:  # A button pressed
+       cmd="/home/pi/bin/perform-speed-test.sh " + SPEED_FILE
+
+       draw.text((x, y), "Mb/s: Checking ...", font=font, fill="#FFFF00")
+
+       disp.image(image, rotation)
+       subprocess.check_output(cmd, shell=True).decode("utf-8")
+
+    else:
+       cmd="echo $((($(date +%s) - $(date +%s -r " + SPEED_FILE + ")) / 60))"
+       Age = subprocess.check_output(cmd, shell=True).decode("utf-8")
+
+       cmd="cat " + SPEED_FILE + " | awk '{ print $2,\" \"}' | tr -d '\n' | sed 's/Mb\/s//g'"
+       Speed = "Mb/s: " + subprocess.check_output(cmd, shell=True).decode("utf-8") + "m" + Age
+
+       draw.text((x, y), Speed, font=font, fill="#FF00FF")
+
+       # Display image.
+       disp.image(image, rotation)
+
+    time.sleep(10)
+
+    First = False
