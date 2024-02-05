@@ -11,3 +11,13 @@ sudo raspi-config nonint do_spi 0
 
 
 then run everything from - Python Installation of RGB Display Library
+
+stats.py now depends on a script - /home/pi/bin/perform-speed-test.sh that creates a 2 line result file /tmp/speed.txt in
+the format of :-
+
+
+speedtest_download         503Mb/s
+speedtest_upload            70Mb/s
+
+
+this file is parsed and displayed on the TFT
