@@ -150,7 +150,7 @@ while True:
     if First or not button_A.value:  # A button pressed
        cmd="/home/pi/bin/perform-speed-test.sh " + SPEED_FILE
 
-       draw.text((x, y), "Mb/s: Checking ...", font=font, fill="#FFFF00")
+       draw.text((x, y), "Mb/s: Checking ...", font=font, fill="#FFFFFF")
 
        disp.image(image, rotation)
        subprocess.check_output(cmd, shell=True).decode("utf-8")
@@ -162,7 +162,7 @@ while True:
        cmd="cat " + SPEED_FILE + " | awk '{ print $2,\" \"}' | tr -d '\n' | sed 's/Mb\/s//g'"
        Speed = "Mb/s: " + subprocess.check_output(cmd, shell=True).decode("utf-8") + "m" + Age
 
-       draw.text((x, y), Speed, font=font, fill="#FF00FF")
+       draw.text((x, y), Speed, font=font, fill="#FFFFFF")
 
        # Display image.
        disp.image(image, rotation)
