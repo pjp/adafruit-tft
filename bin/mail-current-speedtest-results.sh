@@ -7,14 +7,14 @@ TMPFILE=$(/bin/mktemp)
 
 echo "To: \"$RECIPIENTNAME\" $RECIPIENTADDR" > $TMPFILE
 echo "From: $SENDER" >> $TMPFILE
-echo "Subject: Speed Test Results" >> $TMPFILE
+echo "Subject: Prometheus Stats" >> $TMPFILE
 
-#curl -s localhost:9798/metrics | grep -v '^#' | grep 'load' | sed 's/_bits_per_second//' | awk '{ printf "%-25s %4dMb/s\n", $1, $2/1000000}' | tee /tmp/speed.txt >> $TMPFILE
+~/bin/get-speed-history-summaries-from-prometheus.sh 6 >> $TMPFILE
+echo "#====================================" >> $TMPFILE
 
-#bin/perform-speed-test.sh $SPEED_FILE
-#cat $SPEED_FILE >> $TMPFILE
+~/bin/get-cpu-temp-history-from-prometheus.sh 360 >> $TMPFILE
+echo "#====================================" >> $TMPFILE
 
-~/bin/get-speed-histories-from-prometheus.sh >> $TMPFILE
 cat $TMPFILE | /usr/sbin/ssmtp paul@pearceful.net
 
 rm $TMPFILE
