@@ -1,4 +1,4 @@
-#|/bin/bash
+#!/usr/bin/bash
 
 RANGE="${1:-6}"
 
