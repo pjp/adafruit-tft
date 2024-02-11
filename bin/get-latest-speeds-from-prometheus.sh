@@ -18,9 +18,6 @@ ul="$(prometheus-lib-get-latest-value speedtest_upload_bits_per_second 1h | awk 
 echo "speedtest_download $dl" | tee    $SPEED_FILE_TMP
 echo "speedtest_upload   $ul" | tee -a $SPEED_FILE_TMP
 
-# echo "speedtest_download $(~/bin/get-latest-download-speed-from-prometheus.sh | awk '{ printf "%4.0fMb/s\n", $1/1000000}')" | tee    $SPEED_FILE_TMP
-# echo "speedtest_upload   $(~/bin/get-latest-upload-speed-from-prometheus.sh   | awk '{ printf "%4.0fMb/s\n", $1/1000000}')" | tee -a $SPEED_FILE_TMP
-
 #########################################################
 # Have the speed outputs changed since the last check ?
 #
