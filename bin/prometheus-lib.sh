@@ -48,7 +48,7 @@ function prometheus-lib() {
 } 
 
 ##################
-function prometheus-lib() {
+function prometheus-lib-debug() {
 ##################
    label="$1"
    data="$2"
@@ -65,6 +65,7 @@ function prometheus-lib-get-history-as-list() {
 ##########################
    local metric="$1"
    local range="$2"
+   local divider="${3:-1}"
    local curl_output=""
    local jq_output=""
 
@@ -75,12 +76,12 @@ function prometheus-lib-get-history-as-list() {
       # curl -s  "${H/30 * * * *API}/query?query=${metric}\[${range}\]" | jq -r '.data.result[0].values| map(.[1])' | tr -d '[],"' | grep -v '^$' | awk '{printf "%3.1f\n", $1}'
 
       curl_output=$(curl -s "${PROMETHEUS_API}/query?query=${metric}\[${range}\]")
-      prometheus-lib "curl_output" "$curl_output"
+      prometheus-lib-debug "curl_output" "$curl_output"
 
       jq_output="$(echo $curl_output | jq -r '.data.result[0].values| map(.[1])')"
-      prometheus-lib "jq_output" "$jq_output"
+      prometheus-lib-debug "jq_output" "$jq_output"
 
-      echo "$jq_output" | tr -d '[],"' | grep -v '^$' | awk '{printf "%3.1f\n", $1}'
+      echo "$jq_output" | tr -d '[],"' | grep -v '^$' | awk -v divider="$divider" '{printf "%3.1f\n", $1/divider}'
    fi
 }
 
@@ -99,10 +100,10 @@ function prometheus-lib-get-latest-value() {
       #curl -s "${PROMETHEUS_API}/query?query=last_over_time(${metric}\[${range}\])" | jq -r '.data.result[0].value[1]'
 
       curl_output=$(curl -s "${PROMETHEUS_API}/query?query=last_over_time(${metric}\[${range}\])")
-      prometheus-lib "curl_output" "$curl_output"
+      prometheus-lib-debug "curl_output" "$curl_output"
 
       jq_output="$(echo "$curl_output" | jq -r '.data.result[0].value[1]')"
-      prometheus-lib "jq_output" "$jq_output"
+      prometheus-lib-debug "jq_output" "$jq_output"
 
       echo "$jq_output"
    fi
