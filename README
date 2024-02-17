@@ -22,9 +22,3 @@ speedtest_upload            70Mb/s
 
 this file is parsed and displayed on the TFT
 
-
-
-
-
-This project depends on scripts in /bin that cahn be retrieved from https://github.com/pjp/prometheus-scripts.git
-
