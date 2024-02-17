@@ -26,7 +26,7 @@ this file is parsed and displayed on the TFT
 ## Dependencies ##
 
 The stats.py script depends on a script ~/bin/perform-speed-test.sh which requires helper scripts that can be retrieved 
-from https://github.com/pjp/prometheus-scripts.git which, in turn requires a Prometheus database be available.
+from https://github.com/pjp/prometheus-scripts.git which, in turn requires a Prometheus database to be available.
 
 It also expects a speed.txt file to exist in /tmp (normally created by a cron job)
 
