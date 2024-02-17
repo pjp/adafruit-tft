@@ -22,3 +22,6 @@ speedtest_upload            70Mb/s
 
 this file is parsed and displayed on the TFT
 
+
+The stats.py script depends on a script ~/bin/perform-speed-test.sh which requires helper scripts that can be retrieved 
+from https://github.com/pjp/prometheus-scripts.git. Modify the stats.py source if this is not required.
