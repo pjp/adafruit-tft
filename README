@@ -23,8 +23,13 @@ speedtest_upload            70Mb/s
 this file is parsed and displayed on the TFT
 
 
+## Dependencies ##
+
+The stats.py script depends on a script ~/bin/perform-speed-test.sh which requires helper scripts that can be retrieved 
+from https://github.com/pjp/prometheus-scripts.git which, in turn requires a Prometheus database to be available.
+
+It also expects a speed.txt file to exist in /tmp (normally created by a cron job)
 
 
-
-This project depends on scripts in /bin that cahn be retrieved from https://github.com/pjp/prometheus-scripts.git
-
+If these dependencies is not required, simply modify the stats.py source and remove as reqwuired, the code
+does not speficically require them.
