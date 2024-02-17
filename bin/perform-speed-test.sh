@@ -4,7 +4,7 @@ export PATH="$HOME/bin:$PATH"
 
 #############################################
 # Set this to a script that will do something
-# interesting e.g. sent an email maybe
+# interesting e.g. send an email maybe
 #
 POST_HOOK_SCRIPT=""
 
